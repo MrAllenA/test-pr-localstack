@@ -4,8 +4,11 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, closed]
 
+permissions:
+  contents: write  # needed for sticky PR comment
+
 jobs:
-  pr-preview:
+  pr-review:
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
 
@@ -30,7 +33,7 @@ jobs:
       - name: Start Docker Compose
         run: |
           docker compose up -d
-          sleep 20  # wait for Localstack + Postgres
+          sleep 20  # wait for services
 
       # 5. Start FastAPI with logging
       - name: Start FastAPI
@@ -48,13 +51,12 @@ jobs:
           sudo mv ngrok /usr/local/bin/
           ngrok version
 
-      # 7. Start ngrok tunnel manually
+      # 7. Start ngrok tunnel
       - name: Start ngrok tunnel
         id: ngrok
         run: |
           ngrok http 8000 --authtoken=${{ secrets.NGROK_AUTH_TOKEN }} --log=stdout > ngrok.log &
-          sleep 5
-          # Extract public URL
+          sleep 10
           NGROK_URL=$(curl -s localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
           echo "NGROK_URL=$NGROK_URL" >> $GITHUB_ENV
           echo "Tunnel URL: $NGROK_URL"
@@ -69,6 +71,7 @@ jobs:
   pr-teardown:
     if: github.event.action == 'closed'
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
