@@ -3,9 +3,9 @@ name: PR Preview - FastAPI + Localstack
 on:
   pull_request:
     types: [opened, synchronize, reopened, closed]
-
+    
 permissions:
-  contents: write  # needed for PR comments
+  pull-requests: write
 
 jobs:
   pr-review:
