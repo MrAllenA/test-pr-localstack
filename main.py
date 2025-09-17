@@ -29,7 +29,7 @@ s3 = boto3.client(
 
 @app.get("/")
 def root():
-    return {"message": "Hello World"}
+    return {"message": "Hello Suckkers"}
 
 
 @app.get("/config")
