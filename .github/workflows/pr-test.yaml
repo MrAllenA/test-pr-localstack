@@ -3,7 +3,7 @@ name: PR Preview - FastAPI + Localstack
 on:
   pull_request:
     types: [opened, synchronize, reopened, closed]
-    
+
 permissions:
   pull-requests: write
 
@@ -76,7 +76,10 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           message: "🚀 PR Preview is live: ${{ env.NGROK_URL }}"
-
+      - name: Keep tunnel alive
+        run: |
+              echo "🕒 Keeping tunnel alive for 10 minutes..."
+              sleep 300
   pr-teardown:
     if: github.event.action == 'closed'
     runs-on: ubuntu-latest
