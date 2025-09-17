@@ -34,7 +34,13 @@ jobs:
         run: |
           docker compose up -d
           sleep 20  # wait for services to start
-
+      - name: Wait for Localstack
+        run: |
+          echo "⏳ Waiting for Localstack to be ready..."
+          until curl -s http://localhost:4566/_localstack/health | grep "\"s3\": \"running\"" >/dev/null; do
+            sleep 2
+          done
+          echo "✅ Localstack is ready"
       # 5. Start FastAPI
       - name: Start FastAPI
         run: |
