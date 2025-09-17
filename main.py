@@ -27,11 +27,6 @@ s3 = boto3.client(
 )
 
 # Ensure bucket exists
-bucket_name = ssm.get_parameter(Name="/test/S3_BUCKET_NAME")["Parameter"]["Value"]
-try:
-    s3.head_bucket(Bucket=bucket_name)
-except s3.exceptions.ClientError:
-    s3.create_bucket(Bucket=bucket_name)
 
 @app.get("/")
 def root():
@@ -64,6 +59,8 @@ def list_buckets():
 @app.post("/upload")
 def upload_file(file: UploadFile):
     """Upload a file to the mocked S3 bucket"""
+
+
     bucket = ssm.get_parameter(Name="/test/S3_BUCKET_NAME")["Parameter"]["Value"]
     s3.upload_fileobj(file.file, bucket, file.filename)
     return {"message": f"Uploaded {file.filename} to {bucket}"}
