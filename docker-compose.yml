@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:17.4
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: test
+    ports:
+      - "5432:5432"
+
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    ports:
+      - "4566:4566"       # Main Localstack gateway
+    environment:
+      - SERVICES=ssm,s3    # Only start the services you need
+      - DEFAULT_REGION=ap-south-1
+      - DEBUG=1
+    volumes:
+      - "./localstack.sh:/etc/localstack/init/ready.d/localstack.sh"
