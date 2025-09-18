@@ -41,6 +41,9 @@ jobs:
             sleep 2
           done
           echo "✅ Localstack is ready"
+      # 6. Seed Localstack (SSM params & S3 bucket)
+      - name: Seed Localstack
+        run: bash ./localstack.sh  
       # 5. Start FastAPI
       - name: Start FastAPI
         run: |
