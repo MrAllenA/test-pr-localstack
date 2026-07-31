@@ -22,8 +22,8 @@ s3 = boto3.client(
     "s3",
     region_name=AWS_REGION,
     endpoint_url=S3_ENDPOINT,
-    aws_access_key_id="fake",
-    aws_secret_access_key="fake",
+    aws_access_key_id="not_fake",
+    aws_secret_access_key="not_fake",
 )
 
 
@@ -31,7 +31,8 @@ s3 = boto3.client(
 def root():
     return {"message": "Hello World"}
 
-
+def mixed_function():
+    return {"good":"great"}
 @app.get("/config")
 def get_config():
     """Fetch DB connection string from SSM"""
